@@ -1,17 +1,31 @@
 import React, { useEffect, useState } from "react";
 import {  readTopicsOnce } from "../firestoreBackend";
 import { useNavigate } from "react-router";
-import { Box, Card, CardContent, Typography } from "@mui/joy";
+import { Box, Button, Card, CardContent, Typography } from "@mui/joy";
+import { AccessKeyModal } from "../components/AccesKeyModal";
+import { useContext } from "react";
+import { MyAuthContext } from "../context/AuthContext";
 
 
 export const Home = () => {
   const [topics, setTopics] = useState([]);
+  const [modalOpen, setModalOpen] = useState(false);
+  const { hasAccess } = useContext(MyAuthContext)
 
   const navigate=useNavigate()
 
   useEffect(() => {
     readTopicsOnce(setTopics)
   }, []);
+
+  const handleAddTopicClick = () => {
+    if (hasAccess) {
+      navigate("/addtopic");
+    } else {
+      setModalOpen(true); // kulcsot még nem adott meg → modal nyitás
+    }
+  };
+
 
   return (
     <div style={{ maxWidth: 600, margin: "auto", padding: 20,display:'flex',flexDirection:'column',alignItems:'center',gap:'1rem'}}>
@@ -38,6 +52,18 @@ export const Home = () => {
           </Card>
           )}
         </Box>
+        
+     <div style={{textAlign:"center", marginTop:"2rem"}}>
+        <Button  sx={{backgroundColor:'var(--could_color)'}} onClick={handleAddTopicClick}>
+          Új témakör hozzáadása
+        </Button>
+      </div>
+
+         <AccessKeyModal
+          open={modalOpen}
+          onClose={() => setModalOpen(false)}
+          onSuccess={() => navigate("/addtopic")}
+        />
     </div>
   );
 };

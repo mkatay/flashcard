@@ -1,35 +1,33 @@
 import React, { useState } from "react";
-import { addCard } from "../firestoreBackend";
+import {  addTopic } from "../firestoreBackend";
 import { useNavigate, useParams } from "react-router";
 import { useContext } from "react";
 import { MyAuthContext } from "../context/AuthContext";
-import { Button, Textarea, Typography } from "@mui/joy";
-import { IoHome } from "react-icons/io5";
+import { Button, Input, Textarea, Typography } from "@mui/joy";
 
-export const AddCard = () => {
-  const [question, setQuestion] = useState("");
-  const [answer, setAnswer] = useState("");
+
+export const AddTopic = () => {
+  const [name, setName] = useState("");
   const [loading, setLoading] = useState(false);
   const [msg, setMsg] = useState(null);
   const {hasAccess,clearKey}=useContext(MyAuthContext)
 
 const navigate=useNavigate('/')
-  const { id ,name} = useParams();
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!question.trim() || !answer.trim()) {
-      setMsg("Kérlek, töltsd ki mindkét mezőt!");
+    if (!name.trim() ) {
+      setMsg("Kérlek, töltsd ki a mezőt!");
       return;
     }
     setLoading(true);
     setMsg(null);
 
     try {
-      await addCard(id, { question, answer });
-      setMsg("Kártya sikeresen hozzáadva!");
-      setQuestion("");
-      setAnswer("");
+      await addTopic(name);
+      setMsg("Témakör sikeresen hozzáadva!");
+      setName("");
     } catch (error) {
       setMsg("Hiba történt a hozzáadás során.");
       console.error(error);
@@ -42,43 +40,22 @@ const navigate=useNavigate('/')
     clearKey()
     navigate('/')
   }
-  
 
   return (
     <div style={{padding:'1rem'}}>
-      <Typography level="h1"sx={{color:'white',textAlign:'center',padding:'1rem'}}>{name}</Typography>
+      <Typography level="h1"sx={{color:'white',textAlign:'center',padding:'1rem'}}>Új témakör hozzáadása</Typography>
       <form onSubmit={handleSubmit} style={{ maxWidth: 400, margin: "auto" }}>
         <div style={{ marginBottom: 12 }}>
         
-            <Textarea
-              value={question}
-              onChange={(e) => setQuestion(e.target.value)}
-              minRows={4}
-              placeholder="kérdés..."
+            <Input value={name} onChange={(e) => setName(e.target.value)}
+              placeholder="témakör neve..."
               style={{ width: "100%" }}
               disabled={loading}
               required
             />
        
         </div>
-        <div style={{ marginBottom: 12 }}>
-        
-            <Textarea
-              value={answer}
-              onChange={(e) => setAnswer(e.target.value)}
-              minRows={4}
-              placeholder="válasz..."
-              style={{ width: "100%" }}
-              disabled={loading}
-              required
-            />
- 
-        </div>
-        <Button
-          type="submit"
-          disabled={loading}
-          style={{ padding: "8px 16px" }}
-        >
+        <Button type="submit" disabled={loading}  style={{ padding: "8px 16px" }}>
           {loading ? "Mentés..." : "Hozzáadás"}
         </Button>
         {msg && <p style={{ marginTop: 10 }}>{msg}</p>}

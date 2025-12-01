@@ -4,7 +4,7 @@ import { useNavigate, useParams } from 'react-router';
 import { readCardsOnce } from '../firestoreBackend';
 import { MyFlashCard } from '../components/MyFlashCard';
 import { useEffect } from 'react';
-import { GrCaretNext } from "react-icons/gr";
+import { IoHome } from "react-icons/io5";
 import { IoCaretBack } from "react-icons/io5";
 import { IoCaretForwardSharp } from "react-icons/io5";
 import { Button } from '@mui/joy';
@@ -84,6 +84,7 @@ const navigate=useNavigate()
           onClose={() => setModalOpen(false)}
           onSuccess={() => navigate("/addcard/" + id+"/"+name)}
         />
+        <IoHome size={30} style={{position:'fixed',top:0,left:0,color:'white'}} onClick={()=>navigate('/')}/>
     </div>
   )
 }
