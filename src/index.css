@@ -1,0 +1,16 @@
+*{
+    box-sizing: border-box;
+}
+body {
+  font-family: "Inter", sans-serif;
+  background-color: #4a5057;
+}
+:root{
+--base_color:#636b74;/* alapszín*/
+
+--warm_color:#6b6364;/* meleg, rózsás-barnás árnyalat*/
+
+--complementer_color:#9c948b;/* komplementer*/
+
+--could_color:#948b9c; /*hideg lilás-szürke*/
+}
