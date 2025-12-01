@@ -8,11 +8,17 @@ import { GrCaretNext } from "react-icons/gr";
 import { IoCaretBack } from "react-icons/io5";
 import { IoCaretForwardSharp } from "react-icons/io5";
 import { Button } from '@mui/joy';
+import { useContext } from 'react';
+import { MyAuthContext } from '../context/AuthContext';
+import { AccessKeyModal } from '../components/AccesKeyModal';
 
 export const Topic = () => {
+const { hasAccess } = useContext(MyAuthContext)
 const [cards, setCards] = useState([]);
 const [index, setIndex] = useState(0);
 const [flipped, setFlipped] = useState(false);
+const [modalOpen, setModalOpen] = useState(false);
+
 
 const {id,name}=useParams()
 const navigate=useNavigate()
@@ -32,6 +38,15 @@ const navigate=useNavigate()
  
   }
   const currentCard = cards[index]; //csak ezt az egyet mutatjuk
+
+  const handleAddCardClick = () => {
+    if (hasAccess) {
+      navigate("/addcard/" + id);
+    } else {
+      setModalOpen(true); // kulcsot még nem adott meg → modal nyitás
+    }
+  };
+
 
 
   return (
@@ -58,11 +73,17 @@ const navigate=useNavigate()
           )}
       </div>
 
-      <div style={{textAlign:"center", marginTop:"2rem"}}>
-        <Button  color="neutral" onClick={() => navigate("/addcard/" + id)}>
+     <div style={{textAlign:"center", marginTop:"2rem"}}>
+        <Button  color="neutral" onClick={handleAddCardClick}>
           Új kártya hozzáadása
         </Button>
       </div>
+
+         <AccessKeyModal
+          open={modalOpen}
+          onClose={() => setModalOpen(false)}
+          onSuccess={() => navigate("/addcard/" + id+"/"+name)}
+        />
     </div>
   )
 }

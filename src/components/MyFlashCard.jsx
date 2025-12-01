@@ -2,7 +2,7 @@ import { useState } from 'react';
 import ReactFlipCard from 'reactjs-flip-card'
 
 export const MyFlashCard = ({question,answer,flipped,setFlipped}) => {
-    console.log(flipped);
+   // console.log(flipped);
     
    
   const styles = {
