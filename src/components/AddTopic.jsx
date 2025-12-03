@@ -1,8 +1,6 @@
 import React, { useState } from "react";
 import {  addTopic } from "../firestoreBackend";
-import { useNavigate, useParams } from "react-router";
-import { useContext } from "react";
-import { MyAuthContext } from "../context/AuthContext";
+
 import { Button, Input, Textarea, Typography } from "@mui/joy";
 
 
@@ -10,9 +8,6 @@ export const AddTopic = () => {
   const [name, setName] = useState("");
   const [loading, setLoading] = useState(false);
   const [msg, setMsg] = useState(null);
-  const {hasAccess,clearKey}=useContext(MyAuthContext)
-
-const navigate=useNavigate('/')
 
 
   const handleSubmit = async (e) => {
@@ -36,10 +31,7 @@ const navigate=useNavigate('/')
     }
   };
 
-  const handleLogout=()=>{
-    clearKey()
-    navigate('/')
-  }
+  
 
   return (
     <div style={{padding:'1rem'}}>
@@ -60,16 +52,7 @@ const navigate=useNavigate('/')
         </Button>
         {msg && <p style={{ marginTop: 10 }}>{msg}</p>}
       </form>
-      {hasAccess && (
-        <Button
-          color="danger"
-          onClick={handleLogout}
-          size="sm"
-          style={{ marginBottom: "1rem",position:'fixed',bottom:0,right:0 }}
-        >
-          Kilépés admin módból
-        </Button>
-      )}
+     
 
     </div>
   );

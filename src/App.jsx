@@ -5,7 +5,7 @@ import { Home } from './pages/Home'
 import { AddCard } from './pages/AddCard'
 import { Topic } from './pages/Topic'
 import '@fontsource/inter';
-import { AddTopic } from './pages/AddTopic'
+import { ModifyTopics } from './pages/ModifyTopics'
 
 function App() {
 
@@ -13,7 +13,7 @@ function App() {
   return (
     <Routes>
       <Route path='/' element={<Home/>}/>
-      <Route path='/addtopic' element={<AddTopic/>}/>
+      <Route path='/addtopic' element={<ModifyTopics/>}/>
       <Route path='/topic/:id/:name' element={<Topic/>}/>
       <Route path='/addcard/:id/:name' element={<AddCard />}/>
     </Routes>

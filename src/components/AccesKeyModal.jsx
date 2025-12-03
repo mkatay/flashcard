@@ -13,12 +13,12 @@ import { MyAuthContext } from "../context/AuthContext";
 
 export const AccessKeyModal=({ open, onClose, onSuccess })=>{
   const [value, setValue] = React.useState("");
-  const { submitKey } = useContext(MyAuthContext);
+  const { verifyKey } = useContext(MyAuthContext);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const ok = await submitKey(value);   // boolean visszatérési érték javasolt
-    if (ok) {
+    const result = await verifyKey(value);   // boolean visszatérési érték javasolt
+    if (result) {
       onClose();
       onSuccess();                       // ha jó a kulcs → navigate
     } else {

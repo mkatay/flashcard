@@ -85,14 +85,17 @@ export const deleteCard = async (topicId, cardId) => {
  *  EGYSZERI OLVASÁS 
  *******************************************************************/
 
-export const readTopicsOnce = async (setTopics) => {
+export const readTopicsOnce = async (setTopics,setLoading) => {
   try {
     const docRef =collection(db, "topics");
     const snap = await getDocs(docRef);
     setTopics(snap.docs.map((d)=>({ id: d.id, ...d.data() }) ))
+   
   } catch (error) {
     console.error("Téma lekérési hiba:", error);
     return null;
+  }finally{
+    setLoading(false)
   }
 };
 

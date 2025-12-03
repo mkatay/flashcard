@@ -1,21 +1,26 @@
 import React, { useEffect, useState } from "react";
 import {  readTopicsOnce } from "../firestoreBackend";
 import { useNavigate } from "react-router";
-import { Box, Button, Card, CardContent, Typography } from "@mui/joy";
+import { Box, Button, Card, CardContent, Skeleton, Typography } from "@mui/joy";
 import { AccessKeyModal } from "../components/AccesKeyModal";
 import { useContext } from "react";
 import { MyAuthContext } from "../context/AuthContext";
+import { HashLoader } from "react-spinners";
+import { IoIosAddCircleOutline } from "react-icons/io";
+import { FaPencilAlt } from "react-icons/fa";
 
 
 export const Home = () => {
   const [topics, setTopics] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
   const { hasAccess } = useContext(MyAuthContext)
+  const [loading,setLoading]=useState(false)
 
   const navigate=useNavigate()
 
   useEffect(() => {
-    readTopicsOnce(setTopics)
+    setLoading(true)
+    readTopicsOnce(setTopics,setLoading)
   }, []);
 
   const handleAddTopicClick = () => {
@@ -26,6 +31,7 @@ export const Home = () => {
     }
   };
 
+console.log(loading);
 
   return (
     <div style={{ maxWidth: 600, margin: "auto", padding: 20,display:'flex',flexDirection:'column',alignItems:'center',gap:'1rem'}}>
@@ -41,6 +47,13 @@ export const Home = () => {
           gap: 2,
         }}
        >
+      <HashLoader 
+        color='white'
+        loading={loading}
+        size={150}
+        aria-label="Loading Spinner"
+       
+      />
           {topics && topics.map((topic) => 
           <Card variant="solid" key={topic.id}  onClick={() => navigate('/topic/'+topic.id+'/'+topic.name)}>
             <CardContent>
@@ -53,9 +66,9 @@ export const Home = () => {
           )}
         </Box>
         
-     <div style={{textAlign:"center", marginTop:"2rem"}}>
+     <div style={{position:'fixed',bottom:'5px',right:'5px',textAlign:"center"}}>
         <Button  sx={{backgroundColor:'var(--could_color)'}} onClick={handleAddTopicClick}>
-          Új témakör hozzáadása
+          <FaPencilAlt size={20}/>
         </Button>
       </div>
 
