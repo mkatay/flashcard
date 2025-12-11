@@ -40,7 +40,9 @@ export const deleteTopicWithCards = async (topicId) => {
     // 1) Lekérjük a kártyákat
     const cardsSnap = await getDocs(cardsRef);
     // 2) Batch törlés a kártyákra
-    const batch = writeBatch(db);//a Firestore egyik beépített művelete, amivel több írást / törlést egyetlen tranzakcióban tudsz lefuttatni.Ezért használjuk subcollection törlésére is.
+    const batch = writeBatch(db);//a Firestore egyik beépített művelete, 
+    // amivel több írást / törlést egyetlen tranzakcióban tudsz lefuttatni.
+    // Ezért használjuk subcollection törlésére is.
     cardsSnap.forEach((card) => {
       batch.delete(card.ref);
     });

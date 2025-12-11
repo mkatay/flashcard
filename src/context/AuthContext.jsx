@@ -1,26 +1,33 @@
 // AuthContext.jsx
 import { createContext, useState } from "react";
-import { sha1 } from "../utils";
+import axios from "axios";
 
 export const MyAuthContext = createContext();
-
-const STORED_HASH = "b1abf66e5cecc57b78fec302ee9f531bb029f422"; 
 
 export const AuthProvider = ({ children }) => {
   const [hasAccess, setHasAccess] = useState(false);
 
-const verifyKey = async (key) => {
-  const hash = await sha1(key);
-  const result = hash === STORED_HASH;//true vagy false
-  if (result) setHasAccess(true);
-  return result;  // fontos → modal ebből tudja, hogy sikerült-e
-};
-const clearKey = () => {
+  const verifyKey = async (key) => {
+    try {
+      const res = await axios.post("http://localhost:3001/login", { key });
+      const token = res.data.token;
+      if (!token) return false;
+
+      localStorage.setItem("token", token);
+      setHasAccess(true);
+      return true;
+    } catch (err) {
+      return false;
+    }
+  };
+
+  const clearKey = () => {
+    localStorage.removeItem("token");
     setHasAccess(false);
-    };
+  };
 
   return (
-    <MyAuthContext.Provider value={{ hasAccess, verifyKey,clearKey }}>
+    <MyAuthContext.Provider value={{ hasAccess, verifyKey, clearKey }}>
       {children}
     </MyAuthContext.Provider>
   );

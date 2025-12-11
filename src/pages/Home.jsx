@@ -12,8 +12,6 @@ import { FaPencilAlt } from "react-icons/fa";
 
 export const Home = () => {
   const [topics, setTopics] = useState([]);
-  const [modalOpen, setModalOpen] = useState(false);
-  const { hasAccess } = useContext(MyAuthContext)
   const [loading,setLoading]=useState(false)
 
   const navigate=useNavigate()
@@ -22,14 +20,6 @@ export const Home = () => {
     setLoading(true)
     readTopicsOnce(setTopics,setLoading)
   }, []);
-
-  const handleAddTopicClick = () => {
-    if (hasAccess) {
-      navigate("/addtopic");
-    } else {
-      setModalOpen(true); // kulcsot még nem adott meg → modal nyitás
-    }
-  };
 
 console.log(loading);
 
@@ -64,19 +54,7 @@ console.log(loading);
             </CardContent>
           </Card>
           )}
-        </Box>
-        
-     <div style={{position:'fixed',bottom:'5px',right:'5px',textAlign:"center"}}>
-        <Button  sx={{backgroundColor:'var(--could_color)'}} onClick={handleAddTopicClick}>
-          <FaPencilAlt size={20}/>
-        </Button>
-      </div>
-
-         <AccessKeyModal
-          open={modalOpen}
-          onClose={() => setModalOpen(false)}
-          onSuccess={() => navigate("/addtopic")}
-        />
+        </Box>    
     </div>
   );
 };
