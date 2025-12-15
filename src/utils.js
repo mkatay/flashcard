@@ -1,3 +1,5 @@
+
+
 export const  sha1=async (str)=>{
   return crypto.subtle.digest("SHA-1", new TextEncoder().encode(str))
     .then(buf => Array.from(new Uint8Array(buf))

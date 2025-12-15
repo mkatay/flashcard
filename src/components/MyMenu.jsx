@@ -28,7 +28,7 @@ export const MyMenu=()=> {
         navigate('/')
     }
   return (
-    <>
+    <div>
     <Dropdown className="menu">
       <MenuButton
         slots={{ root: IconButton }}
@@ -38,10 +38,10 @@ export const MyMenu=()=> {
       </MenuButton>
       <Menu>
         {hasAccess ?
-            <>
+            <div>
             <MenuItem onClick={handleLogout}>Logout</MenuItem>
-            <MenuItem>Dashboard</MenuItem>   
-            </>
+            <MenuItem onClick={()=>navigate("/dashboard")}>Dashboard</MenuItem>   
+            </div>
         :
             <MenuItem onClick={handleLogin}>Login</MenuItem>
         }
@@ -52,6 +52,6 @@ export const MyMenu=()=> {
               onClose={() => setModalOpen(false)}
               onSuccess={() => navigate("/dashboard")}
             />
-    </>
+    </div>
   );
 }

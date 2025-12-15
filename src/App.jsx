@@ -8,18 +8,21 @@ import '@fontsource/inter';
 
 import { MyMenu } from './components/MyMenu'
 import { Dashboard } from './pages/Dashboard'
+import { useContext } from 'react'
+import { MyAuthContext } from './context/AuthContext'
 
 function App() {
-
+const {hasAccess}=useContext(MyAuthContext)
 
   return (
     <div className='app'>
       <MyMenu/>
+    
     <Routes>
       <Route path='/' element={<Home/>}/>
-      <Route path='/dashboard' element={<Dashboard/>}/>
+      <Route path='/dashboard' element={hasAccess ? <Dashboard/> : <Home/>}/>
       <Route path='/topic/:id/:name' element={<Topic/>}/>
-      <Route path='/addcard/:id/:name' element={<AddCard />}/>
+      <Route path='/addcard/:id/:name' element={hasAccess ?<AddCard /> : <Home/>}/>
     </Routes>
     </div>
   )

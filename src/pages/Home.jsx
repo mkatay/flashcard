@@ -21,7 +21,7 @@ export const Home = () => {
     readTopicsOnce(setTopics,setLoading)
   }, []);
 
-console.log(loading);
+//console.log(loading);
 
   return (
     <div style={{ maxWidth: 600, margin: "auto", padding: 20,display:'flex',flexDirection:'column',alignItems:'center',gap:'1rem'}}>

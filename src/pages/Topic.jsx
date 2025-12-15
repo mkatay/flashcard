@@ -17,7 +17,7 @@ const { hasAccess } = useContext(MyAuthContext)
 const [cards, setCards] = useState([]);
 const [index, setIndex] = useState(0);
 const [flipped, setFlipped] = useState(false);
-const [modalOpen, setModalOpen] = useState(false);
+//const [modalOpen, setModalOpen] = useState(false);
 
 
 const {id,name}=useParams()
@@ -39,7 +39,7 @@ const navigate=useNavigate()
   }
   const currentCard = cards[index]; //csak ezt az egyet mutatjuk
 
-  const handleAddCardClick = () => {
+  /*const handleAddCardClick = () => {
     if (hasAccess) {
       navigate("/addcard/" + id);
     } else {
@@ -47,7 +47,7 @@ const navigate=useNavigate()
     }
   };
 
-
+*/
 
   return (
     <div>
@@ -72,7 +72,7 @@ const navigate=useNavigate()
             </div>
           )}
       </div>
-
+{/*
      <div style={{textAlign:"center", marginTop:"2rem"}}>
         <Button  color="neutral" onClick={handleAddCardClick}>
           Új kártya hozzáadása
@@ -84,6 +84,7 @@ const navigate=useNavigate()
           onClose={() => setModalOpen(false)}
           onSuccess={() => navigate("/addcard/" + id+"/"+name)}
         />
+*/}
         <IoHome size={30} style={{position:'fixed',top:0,left:0,color:'white'}} onClick={()=>navigate('/')}/>
     </div>
   )
