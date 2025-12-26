@@ -24,14 +24,28 @@ import {
  *                   
  **********************************************/
 // 🔹 TÉMA LÉTREHOZÁSA
+
 export const addTopic = async (name) => {
-    try {
-        const collectionRef = collection(db, "topics"); 
-        await addDoc(collectionRef, {name});
-    } catch (error) {
+  try {
+    const collectionRef = collection(db, "topics");
+    const docRef = await addDoc(collectionRef, { name });
+    return docRef.id; // visszaadod az új dokumentum ID-ját
+  } catch (error) {
     console.error("Hiba a témakör hozzáadásakor:", error);
-    }
-}
+    throw error; // tovább dobadod a hibát, hogy kezelni tudd
+  }
+};
+// téma MÓDOSÍTÁSA
+export const updateTopic = async (topicId,updatedData) => {
+  console.log(topicId,updatedData);
+  
+  try {
+    const docRef = doc(db, "topics", topicId);
+    await updateDoc(docRef, {...updatedData});
+  } catch (error) {
+    console.error("Témakör frissítési hiba:", error);
+  }
+};
 // Téma + al-collection (cards) törlése
 export const deleteTopicWithCards = async (topicId) => {
   try {

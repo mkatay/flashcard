@@ -18,35 +18,37 @@ import {
   GridActionsCell,
   GridActionsCellItem,
 } from '@mui/x-data-grid';
-import {
-   randomId,
- 
-} from '@mui/x-data-grid-generator';
+
 import { useEffect } from 'react';
-import { readTopicsOnce } from '../firestoreBackend';
+import { addTopic, deleteTopicWithCards, readTopicsOnce, updateTopic } from '../firestoreBackend';
 import { useState } from 'react';
+import { } from 'material-ui-confirm';
+import { useConfirm } from 'material-ui-confirm';
+import { Typography } from '@mui/material';
 
 
 function EditToolbar(props) {
   const { setRows, setRowModesModel } = props;
 
-  const handleClick = () => {
-    const id = randomId();
-    setRows((oldRows) => [
-      ...oldRows,
-      { id, name: '', isNew: true },
-    ]);
+  
+const handleClick = async () => {
+  try {
+    const id = await addTopic(''); // itt meghívod, és megvárod az ID-t
+    setRows((oldRows) => [...oldRows,{ id, name: '', isNew: true }]);
     setRowModesModel((oldModel) => ({
       ...oldModel,
       [id]: { mode: GridRowModes.Edit, fieldToFocus: 'name' },
     }));
-  };
-
+  } catch (error) {
+    console.error('Hiba új témakör hozzáadásakor:', error);
+    // Itt kezelheted a hibát (pl. értesítés)
+  }
+};
   return (
     <Toolbar>
       <Tooltip title="Add record">
         <ToolbarButton onClick={handleClick}>
-          <AddIcon fontSize="small" />
+          <AddIcon fontSize="small" style={{color:'green'}}/>
         </ToolbarButton>
       </Tooltip>
     </Toolbar>
@@ -89,16 +91,16 @@ function ActionsCell(props) {
       ) : (
         <React.Fragment>
           <GridActionsCellItem
-            icon={<EditIcon />}
+            icon={<EditIcon style={{color:'blue'}}/>}
             label="Edit"
             className="textPrimary"
             onClick={() => handleEditClick(props.id)}
             color="inherit"
           />
           <GridActionsCellItem
-            icon={<DeleteIcon />}
+            icon={<DeleteIcon style={{color:'red'}}/>}
             label="Delete"
-            onClick={() => handleDeleteClick(props.id)}
+            onClick={() => handleDeleteClick(props.id,props.row.name)}
             color="inherit"
           />
         </React.Fragment>
@@ -124,6 +126,7 @@ export const UpdateTopic=()=> {
   const [rows, setRows] = React.useState([]);
   const [loading,setLoading]=useState(false)
   const [rowModesModel, setRowModesModel] = React.useState({});
+  const confirm = useConfirm();
 
   useEffect(()=>{
     readTopicsOnce(setRows,setLoading)
@@ -150,8 +153,20 @@ console.log(rows);
           [id]: { mode: GridRowModes.View },
         }));
       },
-      handleDeleteClick: (id) => {
-        setRows((prevRows) => prevRows.filter((row) => row.id !== id));
+      handleDeleteClick: async (id,name) => {
+        try {
+          const { confirmed, reason } = await confirm({ description:'Ez egy visszavonhatatlan művelet!',
+                            confirmationText:'igen',
+                            cancellationText:'mégsem',
+                            title:`Biztosan ki szeretnéd törölni a **${name}** témakört?`
+                  })
+          if(confirmed){
+             await deleteTopicWithCards(id); // először Firestore-ban törlünk
+             setRows(prevRows => prevRows.filter((row) => row.id !== id));
+          }else console.log(reason);
+          } catch (error) {
+              console.log('mégsem:',error);
+          }
       },
       handleCancelClick: (id) => {
         setRowModesModel((prevRowModesModel) => {
@@ -172,14 +187,19 @@ console.log(rows);
     }),
     [],
   );
+  const processRowUpdate = async (newRow, oldRow) => {
+    if (newRow.name === oldRow.name)  return oldRow; // nincs update
+    try {
+      await updateTopic(newRow.id, {name: newRow.name});
+      const updatedRow = { ...newRow, isNew: false };
+      setRows((prevRows) => prevRows.map((row) =>row.id === newRow.id ? updatedRow : row));
+      return updatedRow; // ✅ commit
+    } catch (error) {
+      console.error(error);
+      throw error; // ❗ kötelező rollbackhez
+    }
+};
 
-  const processRowUpdate = (newRow) => {
-    const updatedRow = { ...newRow, isNew: false };
-    setRows((prevRows) =>
-      prevRows.map((row) => (row.id === newRow.id ? updatedRow : row)),
-    );
-    return updatedRow;
-  };
 
   return (
     <Box
@@ -194,6 +214,7 @@ console.log(rows);
         },
       }}
     >
+      <Typography sx={{color:"white"}}>Témakörök</Typography>
       <ActionHandlersContext.Provider value={actionHandlers}>
         <DataGrid
           rows={rows}
