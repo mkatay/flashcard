@@ -13,7 +13,6 @@ import { MyAuthContext } from '../context/AuthContext';
 import { AccessKeyModal } from '../components/AccesKeyModal';
 
 export const Topic = () => {
-const { hasAccess } = useContext(MyAuthContext)
 const [cards, setCards] = useState([]);
 const [index, setIndex] = useState(0);
 const [flipped, setFlipped] = useState(false);

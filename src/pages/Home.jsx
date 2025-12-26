@@ -1,14 +1,8 @@
 import React, { useEffect, useState } from "react";
 import {  readTopicsOnce } from "../firestoreBackend";
 import { useNavigate } from "react-router";
-import { Box, Button, Card, CardContent, Skeleton, Typography } from "@mui/joy";
-import { AccessKeyModal } from "../components/AccesKeyModal";
-import { useContext } from "react";
-import { MyAuthContext } from "../context/AuthContext";
+import { Box, Card, CardContent, Typography } from "@mui/joy";
 import { HashLoader } from "react-spinners";
-import { IoIosAddCircleOutline } from "react-icons/io";
-import { FaPencilAlt } from "react-icons/fa";
-
 
 export const Home = () => {
   const [topics, setTopics] = useState([]);

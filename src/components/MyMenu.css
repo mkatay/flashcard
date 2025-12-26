@@ -1,7 +1,7 @@
-.app {
-  position: relative;
+.myMenu {
+position: relative;
 }
-.myMenu.MuiIconButton-root {
+.myMenu>button.MuiIconButton-root {
   position: absolute;
   top: 5px;
   right: 5px;
