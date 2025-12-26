@@ -108,7 +108,7 @@ function ActionsCell(props) {
 }
 
 const columns = [
-  { field: 'name', headerName: 'Name', width: 180, editable: true },
+  { field: 'name', headerName: 'Name', width: 200, flex:1,editable: true },
   
   {
     field: 'actions',
@@ -185,7 +185,7 @@ console.log(rows);
     <Box
       sx={{
         height: 500,
-        width: '320px',
+       
         '& .actions': {
           color: 'text.secondary',
         },

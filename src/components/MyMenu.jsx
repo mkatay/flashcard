@@ -28,7 +28,7 @@ export const MyMenu=()=> {
         navigate('/')
     }
   return (
-    <div>
+    <div className='myMenu'>
     <Dropdown className="menu">
       <MenuButton
         slots={{ root: IconButton }}
