@@ -20,7 +20,7 @@ import {
 } from '@mui/x-data-grid';
 
 import { useEffect } from 'react';
-import { addTopic, deleteTopicWithCards, readCardsOnce, readTopicsOnce, updateTopic } from '../firestoreBackend';
+import { addCard, deleteCard, deleteTopicWithCards, readCardsOnce, readTopicsOnce, updateCard, updateTopic } from '../firestoreBackend';
 import { useState } from 'react';
 import { } from 'material-ui-confirm';
 import { useConfirm } from 'material-ui-confirm';
@@ -28,16 +28,18 @@ import { Typography } from '@mui/material';
 
 
 function EditToolbar(props) {
-  const { setRows, setRowModesModel } = props;
+  const { setRows, setRowModesModel,topicId } = props;
 
   
 const handleClick = async () => {
-  try {
-    const id = await addTopic(''); // itt meghívod, és megvárod az ID-t
-    setRows((oldRows) => [...oldRows,{ id, name: '', isNew: true }]);
+  console.log(topicId);
+  
+  try {//itt csak hozzáadunk egy üres kártyát, h meglegyen az id, aztán a konkrét adatot módosítást a processRowUpdate fg. végzi
+    const id = await addCard(topicId,{question:'',answer:''}); // itt meghívod, és megvárod az ID-t
+    setRows((oldRows) => [...oldRows,{ id, question: '',answer:'', isNew: true }]);
     setRowModesModel((oldModel) => ({
       ...oldModel,
-      [id]: { mode: GridRowModes.Edit, fieldToFocus: 'name' },
+      [id]: { mode: GridRowModes.Edit, fieldToFocus: 'question' },//hogy hová ugorjon a kúrzor?
     }));
   } catch (error) {
     console.error('Hiba új témakör hozzáadásakor:', error);
@@ -100,7 +102,7 @@ function ActionsCell(props) {
           <GridActionsCellItem
             icon={<DeleteIcon style={{color:'red'}}/>}
             label="Delete"
-            onClick={() => handleDeleteClick(props.id,props.row.name)}
+            onClick={() => handleDeleteClick(props.id,props.row.question)}
             color="inherit"
           />
         </React.Fragment>
@@ -108,9 +110,26 @@ function ActionsCell(props) {
     </GridActionsCell>
   );
 }
+////////////////////////////
+function EditTextarea(props) {
+  const { id, field, value, api } = props;
 
+  const handleChange = (event) => {
+    api.setEditCellValue({ id, field, value: event.target.value });
+  };
+
+  return (
+    <textarea
+      style={{ width: '100%', height: '200px' }}
+      value={value || ''}
+      onChange={handleChange}
+    />
+  );
+}
+
+///////////////////////////
 const columns = [
-  { field: 'question', headerName: 'Kérdés', minWidth: 200, flex:1,editable: true ,
+  { field: 'question', headerName: 'Kérdés', minWidth: 250, flex:1,editable: true ,
      renderCell: (params) => (
         <Box
         sx={{
@@ -135,6 +154,7 @@ const columns = [
         {params.value}
         </Box>
     ),
+    renderEditCell: (params) => <EditTextarea {...params} />,
   },
   {
     field: 'actions',
@@ -177,16 +197,16 @@ console.log(rows);
           [id]: { mode: GridRowModes.View },
         }));
       },
-      handleDeleteClick: async (id,name) => {
+      handleDeleteClick: async (cardId,question) => {
         try {
           const { confirmed, reason } = await confirm({ description:'Ez egy visszavonhatatlan művelet!',
                             confirmationText:'igen',
                             cancellationText:'mégsem',
-                            title:`Biztosan ki szeretnéd törölni a **${name}** témakört?`
+                            title:`Biztosan ki szeretnéd törölni a **${question}** kártyát?`
                   })
           if(confirmed){
-             await deleteTopicWithCards(id); // először Firestore-ban törlünk
-             setRows(prevRows => prevRows.filter((row) => row.id !== id));
+             await deleteCard(id,cardId); // először Firestore-ban törlünk
+             setRows(prevRows => prevRows.filter((row) => row.id !== cardId));
           }else console.log(reason);
           } catch (error) {
               console.log('mégsem:',error);
@@ -212,9 +232,9 @@ console.log(rows);
     [],
   );
   const processRowUpdate = async (newRow, oldRow) => {
-    if (newRow.name === oldRow.name)  return oldRow; // nincs update
+    if (newRow.answer === oldRow.answer && newRow.question==oldRow.question)  return oldRow; // nincs update
     try {
-      await updateTopic(newRow.id, {name: newRow.name});
+      await updateCard(id,newRow.id, {question: newRow.question,answer:newRow.answer});
       const updatedRow = { ...newRow, isNew: false };
       setRows((prevRows) => prevRows.map((row) =>row.id === newRow.id ? updatedRow : row));
       return updatedRow; // ✅ commit
@@ -253,7 +273,7 @@ console.log(rows);
           showToolbar
           slots={{ toolbar: EditToolbar }}
           slotProps={{
-            toolbar: { setRows, setRowModesModel },
+            toolbar: { setRows, setRowModesModel,topicId:id },
           }}
         />
       </ActionHandlersContext.Provider>

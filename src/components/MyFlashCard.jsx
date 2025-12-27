@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import ReactFlipCard from 'reactjs-flip-card'
+import ReactMarkdown from "react-markdown";
 
 export const MyFlashCard = ({question,answer,flipped,setFlipped}) => {
    // console.log(flipped);
@@ -11,7 +12,7 @@ export const MyFlashCard = ({question,answer,flipped,setFlipped}) => {
             color: 'white',
             borderRadius: 20,
             width: 300,
-            height: 400,
+            height: 410,
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
@@ -24,11 +25,13 @@ export const MyFlashCard = ({question,answer,flipped,setFlipped}) => {
             color: 'white',
             borderRadius: 20,
             width: 300,
-            height: 400,
+            height: 410,
             display: "flex",
+            flexWrap:"wrap",
             justifyContent: "center",
             alignItems: "center",
-            padding:'1rem'
+            padding:'5px',
+            fontSize:'12px'
         },
     }
     
@@ -42,7 +45,7 @@ export const MyFlashCard = ({question,answer,flipped,setFlipped}) => {
                 frontStyle={styles.cardFront}
                 backStyle={styles.cardBack}
                 frontComponent={<div >{question}</div>}
-                backComponent={<div >{answer}</div>}
+                backComponent={<ReactMarkdown>{answer}</ReactMarkdown> }
                 direction='vertical'
             />
      

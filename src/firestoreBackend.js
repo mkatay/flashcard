@@ -70,23 +70,29 @@ export const deleteTopicWithCards = async (topicId) => {
 };
 // 🔹 KÁRTYA HOZZÁADÁSA EGY TÉMÁHOZ
 export const addCard = async (topicId, card) => {
-  try {
-    const subColRef = collection(db, "topics", topicId, "cards");
-    await addDoc(subColRef, {...card});
+  console.log(topicId,card);
+  
+   try {
+    const subCollectionRef = collection(db, "topics",topicId, "cards");
+    const docRef = await addDoc(subCollectionRef, { ...card });
+    return docRef.id; // visszaadod az új dokumentum ID-ját
   } catch (error) {
-    console.error("Kártya létrehozási hiba:", error);
+    console.error("Hiba a kártya hozzáadásakor:", error);
+    throw error; // tovább dobadod a hibát, hogy kezelni tudd
   }
 };
-
 // 🔹 EGY KÁRTYA MÓDOSÍTÁSA
-export const updateCard = async (topicId, cardId, updatedData) => {
+export const updateCard = async (topicId,cardId,updatedData) => {
+  console.log(topicId,cardId,updatedData);
+  
   try {
-    const docRef = doc(db, "topics", topicId, "cards", cardId);
+    const docRef = doc(db, "topics", topicId,"cards",cardId);
     await updateDoc(docRef, {...updatedData});
   } catch (error) {
-    console.error("Kártya frissítési hiba:", error);
+    console.error("Témakör frissítési hiba:", error);
   }
-};
+}
+
 
 // 🔹 EGY KÁRTYA TÖRLÉSE
 export const deleteCard = async (topicId, cardId) => {
