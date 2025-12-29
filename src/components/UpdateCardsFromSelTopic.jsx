@@ -120,7 +120,7 @@ function EditTextarea(props) {
 
   return (
     <textarea
-      style={{ width: '100%', height: '200px' }}
+      style={{ width: '100%', height: '300px' }}
       value={value || ''}
       onChange={handleChange}
     />
@@ -129,7 +129,7 @@ function EditTextarea(props) {
 
 ///////////////////////////
 const columns = [
-  { field: 'question', headerName: 'Kérdés', minWidth: 250, flex:1,editable: true ,
+  { field: 'question', headerName: 'Kérdés', minWidth: 300, flex:1,editable: true ,
      renderCell: (params) => (
         <Box
         sx={{
@@ -141,6 +141,7 @@ const columns = [
         {params.value}
         </Box>
     ),
+    renderEditCell: (params) => <EditTextarea {...params} />,
   },
   { field: 'answer', headerName: 'Válasz', minWidth: 400, flex:1,editable: true ,
      renderCell: (params) => (

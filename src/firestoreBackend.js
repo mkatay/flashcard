@@ -9,7 +9,8 @@ import {
   deleteDoc,
   updateDoc,
   getDoc,
-  getDocs,writeBatch
+  getDocs,writeBatch,
+  getCountFromServer
 } from "firebase/firestore";
 
 /**********************************************
@@ -106,7 +107,7 @@ export const deleteCard = async (topicId, cardId) => {
 /*******************************************************************
  *  EGYSZERI OLVASÁS 
  *******************************************************************/
-
+/*
 export const readTopicsOnce = async (setTopics,setLoading) => {
   try {
     const docRef =collection(db, "topics");
@@ -118,6 +119,32 @@ export const readTopicsOnce = async (setTopics,setLoading) => {
     return null;
   }finally{
     setLoading(false)
+  }
+};
+*/
+export const readTopicsOnce = async (setTopics, setLoading) => {
+  try {
+    const topicsRef = collection(db, "topics");
+    const snap = await getDocs(topicsRef);
+
+    const topicsWithCounts = await Promise.all(
+      snap.docs.map(async (doc) => {
+        const cardsRef = collection(db, "topics", doc.id, "cards");
+        const countSnap = await getCountFromServer(cardsRef);
+
+        return {
+          id: doc.id,
+          ...doc.data(),
+          cardCount: countSnap.data().count
+        };
+      })
+    );
+
+    setTopics(topicsWithCounts);
+  } catch (error) {
+    console.error("Téma lekérési hiba:", error);
+  } finally {
+    setLoading(false);
   }
 };
 

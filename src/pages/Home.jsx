@@ -15,7 +15,7 @@ export const Home = () => {
     readTopicsOnce(setTopics,setLoading)
   }, []);
 
-//console.log(loading);
+console.log(topics);
 
   return (
     <div style={{ maxWidth: 600, margin: "auto", padding: 20,display:'flex',flexDirection:'column',alignItems:'center',gap:'1rem'}}>
@@ -39,12 +39,12 @@ export const Home = () => {
        
       />
           {topics && topics.map((topic) => 
-          <Card variant="solid" key={topic.id}  onClick={() => navigate('/topic/'+topic.id+'/'+topic.name)}>
+          <Card  sx={{width:'250px',textAlign:'center'}}variant="solid" key={topic.id}  onClick={() => navigate('/topic/'+topic.id+'/'+topic.name)}>
             <CardContent>
-              <Typography level="title-md" textColor="inherit">
+              <Typography level="h4" textColor="inherit">
                  {topic.name}
               </Typography>
-              <Typography textColor="inherit">Description of the card.</Typography>
+              <Typography level="title-sm" textColor="inherit">Kártyák száma: {topic.cardCount}</Typography>
             </CardContent>
           </Card>
           )}

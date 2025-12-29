@@ -17,7 +17,7 @@ export const MyFlashCard = ({question,answer,flipped,setFlipped}) => {
             justifyContent: "center",
             alignItems: "center",
             padding:'1rem',
-            fontSize:'1.5rem',
+            fontSize:'1rem',
             textAlign:'center'
         },
         cardBack: { 
@@ -44,8 +44,8 @@ export const MyFlashCard = ({question,answer,flipped,setFlipped}) => {
                 containerStyle={{ width: 300,height: 400,}}
                 frontStyle={styles.cardFront}
                 backStyle={styles.cardBack}
-                frontComponent={<div >{question}</div>}
-                backComponent={<ReactMarkdown>{answer}</ReactMarkdown> }
+                frontComponent={<div style={{ whiteSpace: "normal" }}><ReactMarkdown>{question}</ReactMarkdown></div> }
+                backComponent={<div style={{ whiteSpace: "normal" }}><ReactMarkdown>{answer}</ReactMarkdown></div> }
                 direction='vertical'
             />
      
