@@ -8,6 +8,11 @@ export default defineConfig({
       babel: {
         plugins: [['babel-plugin-react-compiler']],
       },
+      
     }),
+    
   ],
+  build: {
+        chunkSizeWarningLimit: 1600
+    }
 })
