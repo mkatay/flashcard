@@ -50,7 +50,7 @@ const navigate=useNavigate()
 
   return (
     <div>
-      <h1 style={{textAlign:'center',color:'white'}}>{name}</h1>
+      <h4 style={{textAlign:'center',color:'white'}}>{name}</h4>
       <div
           style={{
             display: "flex",
